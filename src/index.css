@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-blue: #1547e7;
+    --gold: #ffaf59;
+    --white: #FFFFFF;
+    --dark-gray: #a89bba;
+  }
+  
+  
+  body {
+    @apply bg-white text-gray-900 font-sans;
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Anton', sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Small-caps label used as a recurring editorial marker across section
+     eyebrows, story categories, and card headers. */
+  .dateline {
+    @apply font-sans text-xs font-semibold uppercase tracking-[0.2em];
+  }
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--primary-blue);
+  }
+  
+  .text-gold {
+    color: var(--gold);
+  }
+  
+  .bg-primary {
+    background-color: var(--primary-blue);
+  }
+  
+  .bg-gold {
+    background-color: var(--gold);
+  }
+  
+  .border-primary {
+    border-color: var(--primary-blue);
+  }
+  
+  .border-gold {
+    border-color: var(--gold);
+  }
+}
