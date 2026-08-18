@@ -6,12 +6,6 @@ import FileUpload from '../../components/FileUpload'
 import { useAuth } from '../../contexts/AuthContext'
 import { getAllRows, createRow, updateRow, deleteRow } from '../../services/supabaseService'
 
-// A single reusable admin manager: table listing + add/edit modal + delete,
-// wired directly to Supabase, driven entirely by a `fields` config.
-//
-// fields: [{ name, label, type, required, options, placeholder }]
-//   type: 'text' | 'textarea' | 'select' | 'checkbox' | 'number' | 'date' | 'image' | 'video' | 'tags'
-//   'tags' = comma-separated list stored as a text[] column (e.g. programs, skills, features)
 const ContentManager = ({ title, description, table, fields, titleField = 'title', orderBy = 'created_at' }) => {
   const [rows, setRows] = useState([])
   const [loading, setLoading] = useState(true)
@@ -314,10 +308,16 @@ const RowModal = ({ title, fields, row, onSave, onClose }) => {
                       key={uploadType}
                       type={uploadType}
                       accept={uploadType === 'video' ? 'video/*' : 'image/*'}
+                      aspect={f.aspect || 4 / 3}
+                      containMode={!!f.containMode}
                       onUploadComplete={(url) => setFormData({ ...formData, [f.name]: url })}
                     />
                     {formData[f.name] && uploadType === 'image' && (
-                      <img src={formData[f.name]} alt="Preview" className="mt-2 w-full h-40 object-cover rounded-lg" />
+                      <img
+                        src={formData[f.name]}
+                        alt="Preview"
+                        className={`mt-2 w-full h-40 rounded-lg ${f.containMode ? 'object-contain bg-gray-100' : 'object-cover'}`}
+                      />
                     )}
                     {formData[f.name] && uploadType === 'video' && (
                       <video src={formData[f.name]} controls className="mt-2 w-full h-40 rounded-lg" />
