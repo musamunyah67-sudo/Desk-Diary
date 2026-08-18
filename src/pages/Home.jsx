@@ -127,7 +127,7 @@ const Home = () => {
           <div className="text-center mb-12">
             <p className="dateline text-primary mb-3">Our Mission</p>
             <AnimatedIcon icon={Target} size={40} className="text-primary mx-auto mb-3" haloClassName="bg-primary" variant="pulse" />
-            <h2 className="font-anton text-4xl text-gray-900 mb-4">Why We Show Up</h2>
+            <h2 className="font-anton text-4xl text-gray-900 mb-4">Why We Show Up?</h2>
             <p className="font-serif text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               To empower students by documenting and sharing their stories, achievements, talents, and educational experiences through responsible journalism, digital media, leadership development, and storytelling.
             </p>
