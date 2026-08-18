@@ -125,7 +125,7 @@ const AdminDashboard = () => {
                 { name: 'category', label: 'Category', type: 'select', options: ['feature', 'success', 'community', 'inspirational'] },
                 { name: 'author', label: 'Author', type: 'text' },
                 { name: 'content', label: 'Content', type: 'textarea', required: true },
-                { name: 'image_url', label: 'Image', type: 'image' },
+                { name: 'image_url', label: 'Image', type: 'image', aspect: 16 / 9 },
                 { name: 'published', label: 'Publish immediately', type: 'checkbox' },
               ]}
             />
@@ -142,7 +142,7 @@ const AdminDashboard = () => {
                 { name: 'category', label: 'Category', type: 'select', options: ['educational', 'school_updates', 'blog'] },
                 { name: 'author', label: 'Author', type: 'text' },
                 { name: 'content', label: 'Content', type: 'textarea', required: true },
-                { name: 'image_url', label: 'Image', type: 'image' },
+                { name: 'image_url', label: 'Image', type: 'image', aspect: 16 / 9 },
                 { name: 'published', label: 'Publish immediately', type: 'checkbox' },
               ]}
             />
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
                 { name: 'description', label: 'Description', type: 'textarea', required: true },
                 { name: 'date', label: 'Date', type: 'date', required: true },
                 { name: 'location', label: 'Location', type: 'text' },
-                { name: 'image_url', label: 'Image', type: 'image' },
+                { name: 'image_url', label: 'Image', type: 'image', aspect: 16 / 9 },
                 { name: 'status', label: 'Status', type: 'select', options: ['upcoming', 'past'] },
               ]}
             />
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
                 { name: 'description', label: 'Description', type: 'textarea' },
                 { name: 'category', label: 'Category', type: 'select', options: ['interviews', 'students', 'teachers', 'principals'] },
                 { name: 'media_type', label: 'Media Type', type: 'select', options: ['image', 'video'] },
-                { name: 'media_url', label: 'Upload (image or video, matching Media Type above)', type: 'image', typeFrom: 'media_type' },
+                { name: 'media_url', label: 'Upload (image or video, matching Media Type above)', type: 'image', typeFrom: 'media_type', aspect: 3 / 2 },
               ]}
             />
           )}
@@ -191,7 +191,7 @@ const AdminDashboard = () => {
                 { name: 'name', label: 'Name', type: 'text', required: true },
                 { name: 'role', label: 'Role (e.g. High School Student)', type: 'text' },
                 { name: 'quote', label: 'Quote', type: 'textarea', required: true },
-                { name: 'image_url', label: 'Photo', type: 'image' },
+                { name: 'image_url', label: 'Photo', type: 'image', aspect: 1 },
                 { name: 'published', label: 'Show on site', type: 'checkbox' },
               ]}
             />
@@ -200,7 +200,7 @@ const AdminDashboard = () => {
           {activeTab === 'partners' && (
             <ContentManager
               title="Partners"
-              description="Partner schools and featured schools shown on the Partners page"
+              description="Schools shown on the Partners page — mark each one as a Partner, Featured, or both. They're independent: a school can be featured without being a formal partner, or a partner without being featured on the highlights tab."
               table="partners"
               titleField="name"
               fields={[
@@ -210,8 +210,9 @@ const AdminDashboard = () => {
                 { name: 'contact_email', label: 'Contact Email', type: 'email' },
                 { name: 'phone', label: 'Phone Number', type: 'text' },
                 { name: 'programs', label: 'Programs', type: 'tags' },
-                { name: 'image_url', label: 'Logo / Photo', type: 'image' },
-                { name: 'featured', label: 'Featured school', type: 'checkbox' },
+                { name: 'image_url', label: 'Logo / Photo', type: 'image', aspect: 4 / 3 },
+                { name: 'is_partner', label: 'Partner organization (shows under "Partner Schools")', type: 'checkbox' },
+                { name: 'featured', label: 'Featured school (shows under "Featured Schools")', type: 'checkbox' },
               ]}
             />
           )}
@@ -227,7 +228,7 @@ const AdminDashboard = () => {
                   { name: 'name', label: 'Sponsor Name', type: 'text', required: true },
                   { name: 'tier', label: 'Tier (e.g. Gold Sponsor)', type: 'text' },
                   { name: 'description', label: 'Description', type: 'textarea' },
-                  { name: 'logo_url', label: 'Logo', type: 'image' },
+                  { name: 'logo_url', label: 'Logo', type: 'image', aspect: 3 / 2, containMode: true },
                 ]}
               />
               <ContentManager
