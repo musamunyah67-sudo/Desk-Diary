@@ -55,7 +55,7 @@ const Home = () => {
     <div>
       {/* Hero Section — front-page treatment: text column + rotating photo, like a masthead spread */}
       <section className="relative text-white overflow-hidden">
-        {/* Full-bleed backdrop: graduation photo with a deep-blue tint over it */}
+        {/* Full-bleed backdrop: graduation photo with a light gradient over it for text readability */}
         <div className="absolute inset-0">
           <img
             src="/images/hero-bg-students.jpg"
@@ -63,8 +63,7 @@ const Home = () => {
             aria-hidden="true"
             className="w-full h-full object-cover object-top"
           />
-          <div className="absolute inset-0 bg-primary/90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/55 to-primary/25" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
