@@ -149,12 +149,17 @@ export const getGalleryItemById = async (id) => {
 }
 
 // Partners
-export const getPartners = async (featured = null) => {
+// `featured` and `isPartner` are independent flags on the same row — a
+// school can be featured without being a formal partner org, or a partner
+// without appearing on the featured highlights. Pass null to skip a filter.
+export const getPartners = async (featured = null, isPartner = null) => {
   try {
-    let endpoint = 'partners?order=name.asc'
-    if (featured !== null) {
-      endpoint = `partners?featured=eq.${featured}&order=name.asc`
-    }
+    const filters = []
+    if (featured !== null) filters.push(`featured=eq.${featured}`)
+    if (isPartner !== null) filters.push(`is_partner=eq.${isPartner}`)
+    const endpoint = filters.length
+      ? `partners?${filters.join('&')}&order=name.asc`
+      : 'partners?order=name.asc'
     const data = await restFetch(endpoint)
     return data
   } catch (error) {
