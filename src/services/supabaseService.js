@@ -470,12 +470,69 @@ export const createUserLogin = async ({ email, password, role, sendInvite }, opt
   const response = await fetch(`${supabaseUrl}/functions/v1/create-user`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ email, password, role, sendInvite })
+    body: JSON.stringify({ action: 'create_user', email, password, role, sendInvite })
   })
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: response.statusText }))
     throw new Error(error.error || error.message || 'Failed to create user')
+  }
+
+  return response.json()
+}
+
+// Sets a NEW password for an EXISTING user, as a Superadmin/Admin, via the
+// same create-user Edge Function (service_role required — see
+// supabase/functions/create-user/index.ts). Use this for "reset this
+// person's password" from the admin dashboard.
+export const resetUserPassword = async ({ targetUserId, newPassword }, options = {}) => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+  const headers = {
+    'apikey': supabaseAnonKey,
+    'Content-Type': 'application/json',
+  }
+  if (options.accessToken) {
+    headers['Authorization'] = `Bearer ${options.accessToken}`
+  }
+
+  const response = await fetch(`${supabaseUrl}/functions/v1/create-user`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ action: 'reset_password', targetUserId, newPassword })
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: response.statusText }))
+    throw new Error(error.error || error.message || 'Failed to reset password')
+  }
+
+  return response.json()
+}
+
+// Lets the CURRENTLY LOGGED-IN admin change their own password. Unlike
+// resetUserPassword above, this needs no elevated privileges at all — it's
+// the standard Supabase Auth "update my own user" endpoint, authenticated
+// with the caller's own access token. Any signed-in user can always change
+// their own password this way; no service_role key involved.
+export const updateOwnPassword = async (newPassword, options = {}) => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+  const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+    method: 'PUT',
+    headers: {
+      'apikey': supabaseAnonKey,
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${options.accessToken}`,
+    },
+    body: JSON.stringify({ password: newPassword })
+  })
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: response.statusText }))
+    throw new Error(error.error_description || error.msg || error.message || 'Failed to update password')
   }
 
   return response.json()
