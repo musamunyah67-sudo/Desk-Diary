@@ -61,6 +61,11 @@ CREATE TABLE gallery (
 );
 
 -- Partners table
+-- `featured` and `is_partner` are intentionally independent: a school can be
+-- featured on the homepage/highlights without being a formal partner
+-- organization, and a partner doesn't have to be featured. Contact/programs
+-- fields only make sense for actual partners, but the column stays optional
+-- either way since featured-only schools may not have that info.
 CREATE TABLE partners (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   name TEXT NOT NULL,
@@ -69,6 +74,7 @@ CREATE TABLE partners (
   programs TEXT[],
   image_url TEXT,
   featured BOOLEAN DEFAULT false,
+  is_partner BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -162,6 +168,7 @@ CREATE INDEX idx_events_status ON events(status);
 CREATE INDEX idx_events_date ON events(date);
 CREATE INDEX idx_gallery_category ON gallery(category);
 CREATE INDEX idx_partners_featured ON partners(featured);
+CREATE INDEX idx_partners_is_partner ON partners(is_partner);
 CREATE INDEX idx_volunteer_applications_status ON volunteer_applications(status);
 CREATE INDEX idx_campaigns_status ON campaigns(status);
 
