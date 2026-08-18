@@ -118,11 +118,11 @@ const Home = () => {
             </motion.div>
           </div>
         </div>
-        <div className="h-1.5 bg-gold" />
+        <div className="h-10 bg-gradient-to-b from-primary to-white" />
       </section>
 
       {/* Mission Highlight */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-primary/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <p className="dateline text-primary mb-3">Our Mission</p>
@@ -140,14 +140,14 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { icon: Users, value: stats.students_featured, label: 'Students Featured', color: 'text-primary', variant: 'float' },
-              { icon: BookOpen, value: stats.schools_partnered, label: 'Schools Partnered', color: 'text-gold', variant: 'pulse' },
-              { icon: Calendar, value: stats.events_covered, label: 'Events Covered', color: 'text-primary', variant: 'wiggle' },
-              { icon: Award, value: stats.counties_reached, label: 'Counties Reached', color: 'text-gold', variant: 'spin' },
+              { icon: Users, value: stats.students_featured, label: 'Students Featured', variant: 'float' },
+              { icon: BookOpen, value: stats.schools_partnered, label: 'Schools Partnered', variant: 'pulse' },
+              { icon: Calendar, value: stats.events_covered, label: 'Events Covered', variant: 'wiggle' },
+              { icon: Award, value: stats.counties_reached, label: 'Counties Reached', variant: 'spin' },
             ].map((s, i) => (
               <AnimatedCard key={s.label} delay={i * 0.1} className="text-center">
-                <AnimatedIcon icon={s.icon} size={44} className={`mx-auto ${s.color}`} haloClassName={s.color === 'text-primary' ? 'bg-primary' : 'bg-gold'} variant={s.variant} />
-                <div className={`font-anton text-4xl mb-2 mt-2 ${s.color}`}>
+                <AnimatedIcon icon={s.icon} size={44} className="mx-auto text-primary" haloClassName="bg-primary" variant={s.variant} />
+                <div className="font-anton text-4xl mb-2 mt-2 text-primary">
                   <CountUp end={parseInt(s.value.replace(/\D/g, '')) || 0} suffix={s.value.replace(/[\d]/g, '')} />
                 </div>
                 <p className="text-gray-600">{s.label}</p>
@@ -231,7 +231,7 @@ const Home = () => {
               {events.map((event, i) => {
                 const d = event.date ? new Date(event.date) : null
                 return (
-                  <AnimatedCard key={event.id} delay={i * 0.1} className="bg-gray-50 rounded-lg p-6 border-l-4 border-gold cursor-pointer">
+                  <AnimatedCard key={event.id} delay={i * 0.1} className="bg-gray-50 rounded-lg p-6 border-l-4 border-primary/30 cursor-pointer">
                     <Link to={`/events/${event.id}`}>
                       <div className="flex items-start space-x-4">
                         <div className="bg-primary text-white p-4 rounded-lg text-center min-w-[80px]">
