@@ -1,26 +1,64 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
+
+const PRIMARY_LINKS = [
+  { name: 'Home', path: '/' },
+  { name: 'Volunteer', path: '/volunteer' },
+  { name: 'Donate', path: '/donate' },
+  { name: 'Programs', path: '/programs' },
+  { name: 'Contact', path: '/contact' },
+]
+
+const ABOUT_LINKS = [
+  { name: 'About Us', path: '/about' },
+  { name: 'Stories', path: '/stories' },
+  { name: 'News', path: '/news' },
+  { name: 'Events', path: '/events' },
+  { name: 'Gallery', path: '/gallery' },
+  { name: 'Partners', path: '/partners' },
+]
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
   const location = useLocation()
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Stories', path: '/stories' },
-    { name: 'News', path: '/news' },
-    { name: 'Events', path: '/events' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'Partners', path: '/partners' },
-    { name: 'Programs', path: '/programs' },
-    { name: 'Volunteer', path: '/volunteer' },
-    { name: 'Donate', path: '/donate' },
-    { name: 'Contact', path: '/contact' },
-  ]
+  const aboutRef = useRef(null)
 
   const isActive = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path)
+  const isAboutActive = ABOUT_LINKS.some((l) => isActive(l.path))
+
+  // Close the desktop "About Us" dropdown on outside click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (aboutRef.current && !aboutRef.current.contains(e.target)) {
+        setAboutOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  // Close all menus on route change
+  useEffect(() => {
+    setIsOpen(false)
+    setAboutOpen(false)
+    setMobileAboutOpen(false)
+  }, [location.pathname])
+
+  const linkClasses = (active) =>
+    `relative px-3 py-2 text-sm font-semibold uppercase tracking-wide transition-colors ${
+      active ? 'text-primary' : 'text-gray-600 hover:text-primary'
+    }`
+
+  const underline = (active) => (
+    <span
+      className={`absolute left-3 right-3 -bottom-0.5 h-0.5 bg-gold transition-transform origin-left ${
+        active ? 'scale-x-100' : 'scale-x-0'
+      }`}
+    />
+  )
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -31,25 +69,47 @@ const Navbar = () => {
             <span className="font-anton text-2xl md:text-3xl tracking-wider text-primary">DESK DIARY</span>
           </Link>
 
-          <div className="hidden lg:block">
-            <div className="flex items-baseline space-x-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`relative px-3 py-2 text-sm font-semibold uppercase tracking-wide transition-colors ${
-                    isActive(link.path) ? 'text-primary' : 'text-gray-600 hover:text-primary'
-                  }`}
-                >
-                  {link.name}
-                  <span
-                    className={`absolute left-3 right-3 -bottom-0.5 h-0.5 bg-gold transition-transform origin-left ${
-                      isActive(link.path) ? 'scale-x-100' : 'scale-x-0'
-                    }`}
-                  />
-                </Link>
-              ))}
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center space-x-1">
+            <Link to="/" className={linkClasses(isActive('/'))}>
+              Home
+              {underline(isActive('/'))}
+            </Link>
+
+            {/* About Us dropdown */}
+            <div className="relative" ref={aboutRef}>
+              <button
+                onClick={() => setAboutOpen(!aboutOpen)}
+                className={`${linkClasses(isAboutActive)} inline-flex items-center gap-1`}
+                aria-expanded={aboutOpen}
+              >
+                About Us
+                <ChevronDown size={14} className={`transition-transform ${aboutOpen ? 'rotate-180' : ''}`} />
+                {underline(isAboutActive)}
+              </button>
+              {aboutOpen && (
+                <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                  {ABOUT_LINKS.map((link) => (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      className={`block px-4 py-2 text-sm font-medium transition-colors ${
+                        isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
+
+            {PRIMARY_LINKS.slice(1).map((link) => (
+              <Link key={link.path} to={link.path} className={linkClasses(isActive(link.path))}>
+                {link.name}
+                {underline(isActive(link.path))}
+              </Link>
+            ))}
           </div>
 
           <div className="lg:hidden">
@@ -64,17 +124,51 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Mobile menu — same 5 links + an expandable "About Us" section */}
       {isOpen && (
         <div className="lg:hidden border-t border-gray-200 bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((link) => (
+            <Link
+              to="/"
+              className={`block px-3 py-2 rounded-md text-base font-semibold ${
+                isActive('/') ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
+              }`}
+            >
+              Home
+            </Link>
+
+            <button
+              onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-semibold ${
+                isAboutActive ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
+              }`}
+            >
+              About Us
+              <ChevronDown size={18} className={`transition-transform ${mobileAboutOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {mobileAboutOpen && (
+              <div className="pl-4 space-y-1">
+                {ABOUT_LINKS.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`block px-3 py-2 rounded-md text-sm font-medium ${
+                      isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-600 hover:bg-gold/10 hover:text-primary'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {PRIMARY_LINKS.slice(1).map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`block px-3 py-2 rounded-md text-base font-semibold ${
                   isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
                 }`}
-                onClick={() => setIsOpen(false)}
               >
                 {link.name}
               </Link>
