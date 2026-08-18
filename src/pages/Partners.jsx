@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { School, Star, Plus, MapPin, Mail, Phone, X } from 'lucide-react'
+import { School, Star, Plus, MapPin, Mail, Phone, X, Handshake } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getPartners, submitSchoolSubmission } from '../services/supabaseService'
 import toast from 'react-hot-toast'
@@ -60,8 +60,13 @@ const Partners = () => {
   const loadPartners = async () => {
     setLoading(true)
     try {
+      // "Partner Schools" only shows schools flagged as actual partners;
+      // "Featured Schools" is a separate highlight list that isn't
+      // restricted to partners — a school can be featured without being
+      // a formal partner.
       const featured = activeTab === 'featured' ? true : null
-      const data = await getPartners(featured)
+      const isPartner = activeTab === 'schools' ? true : null
+      const data = await getPartners(featured, isPartner)
       setPartners(data)
       // If we were sent here from a homepage/preview click, open that
       // partner's detail modal automatically once the list has loaded.
@@ -151,10 +156,20 @@ const Partners = () => {
                         </div>
                       )}
                       <div className="p-6">
-                        {school.featured && (
-                          <div className="flex items-center space-x-1 text-gold mb-2">
-                            <Star size={16} fill="currentColor" />
-                            <span className="text-sm font-semibold">Featured School</span>
+                        {(school.featured || school.is_partner) && (
+                          <div className="flex items-center gap-3 mb-2">
+                            {school.is_partner && (
+                              <div className="flex items-center space-x-1 text-primary">
+                                <Handshake size={16} />
+                                <span className="text-sm font-semibold">Partner</span>
+                              </div>
+                            )}
+                            {school.featured && (
+                              <div className="flex items-center space-x-1 text-gold">
+                                <Star size={16} fill="currentColor" />
+                                <span className="text-sm font-semibold">Featured</span>
+                              </div>
+                            )}
                           </div>
                         )}
                         <h3 className="font-anton text-xl mb-2">{school.name}</h3>
@@ -392,10 +407,20 @@ const Partners = () => {
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  {selectedPartner.featured && (
-                    <div className="flex items-center space-x-1 text-gold mb-2">
-                      <Star size={16} fill="currentColor" />
-                      <span className="text-sm font-semibold">Featured School</span>
+                  {(selectedPartner.featured || selectedPartner.is_partner) && (
+                    <div className="flex items-center gap-3 mb-2">
+                      {selectedPartner.is_partner && (
+                        <div className="flex items-center space-x-1 text-primary">
+                          <Handshake size={16} />
+                          <span className="text-sm font-semibold">Partner</span>
+                        </div>
+                      )}
+                      {selectedPartner.featured && (
+                        <div className="flex items-center space-x-1 text-gold">
+                          <Star size={16} fill="currentColor" />
+                          <span className="text-sm font-semibold">Featured</span>
+                        </div>
+                      )}
                     </div>
                   )}
                   <h2 className="font-anton text-3xl text-primary">{selectedPartner.name}</h2>
