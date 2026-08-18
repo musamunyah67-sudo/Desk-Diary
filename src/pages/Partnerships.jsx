@@ -250,9 +250,9 @@ const Partnerships = () => {
                   className="bg-gray-50 rounded-lg p-8 text-center hover:shadow-xl transition-all duration-300 cursor-pointer"
                   onClick={() => setSelectedSponsor(sponsor)}
                 >
-                  <div className="h-24 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+                  <div className="h-24 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mb-4 overflow-hidden p-3">
                     {sponsor.logo_url ? (
-                      <img src={sponsor.logo_url} alt={sponsor.name} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                      <img src={sponsor.logo_url} alt={sponsor.name} className="max-h-full max-w-full object-contain" loading="lazy" decoding="async" />
                     ) : (
                       <Building className="text-white w-12 h-12" />
                     )}
@@ -341,8 +341,8 @@ const Partnerships = () => {
                 </button>
               </div>
               {selectedSponsor.logo_url && (
-                <div className="h-40 bg-gradient-to-br from-primary to-blue-600 rounded-lg overflow-hidden mb-6">
-                  <img src={selectedSponsor.logo_url} alt={selectedSponsor.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <div className="h-40 bg-gradient-to-br from-primary to-blue-600 rounded-lg overflow-hidden mb-6 flex items-center justify-center p-4">
+                  <img src={selectedSponsor.logo_url} alt={selectedSponsor.name} className="max-h-full max-w-full object-contain" loading="lazy" decoding="async" />
                 </div>
               )}
               <p className="text-gray-600 mb-6">{selectedSponsor.description || 'No further details have been added for this partner yet.'}</p>
