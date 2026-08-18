@@ -54,8 +54,20 @@ const Home = () => {
   return (
     <div>
       {/* Hero Section — front-page treatment: text column + rotating photo, like a masthead spread */}
-      <section className="relative bg-primary text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <section className="relative text-white overflow-hidden">
+        {/* Full-bleed backdrop: graduation photo with a deep-blue tint over it */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/hero-bg-students.jpg"
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover object-top"
+          />
+          <div className="absolute inset-0 bg-primary/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/85 to-primary/50" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -127,7 +139,7 @@ const Home = () => {
           <div className="text-center mb-12">
             <p className="dateline text-primary mb-3">Our Mission</p>
             <AnimatedIcon icon={Target} size={40} className="text-primary mx-auto mb-3" haloClassName="bg-primary" variant="pulse" />
-            <h2 className="font-anton text-4xl text-gray-900 mb-4">Why We Show Up?</h2>
+            <h2 className="font-anton text-4xl text-gray-900 mb-4">Why We Show Up</h2>
             <p className="font-serif text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               To empower students by documenting and sharing their stories, achievements, talents, and educational experiences through responsible journalism, digital media, leadership development, and storytelling.
             </p>
