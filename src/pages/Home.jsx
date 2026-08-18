@@ -346,11 +346,11 @@ const Home = () => {
                   <AnimatedCard
                     key={p.id}
                     delay={i * 0.1}
-                    className="bg-gray-50 rounded-lg overflow-hidden h-32 text-center hover:shadow-xl transition-all duration-300 cursor-pointer"
+                    className="bg-gray-50 rounded-lg overflow-hidden h-32 text-center hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center p-4"
                     onClick={() => navigate('/partners', { state: { openPartnerId: p.id } })}
                   >
                     {p.image_url ? (
-                      <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <img src={p.image_url} alt={p.name} className="max-w-full max-h-full object-contain" loading="lazy" decoding="async" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center px-3">
                         <span className="font-anton text-lg text-gray-500">{p.name}</span>
