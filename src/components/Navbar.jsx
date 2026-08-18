@@ -71,10 +71,12 @@ const Navbar = () => {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center space-x-1">
-            <Link to="/" className={linkClasses(isActive('/'))}>
-              Home
-              {underline(isActive('/'))}
-            </Link>
+            {PRIMARY_LINKS.map((link) => (
+              <Link key={link.path} to={link.path} className={linkClasses(isActive(link.path))}>
+                {link.name}
+                {underline(isActive(link.path))}
+              </Link>
+            ))}
 
             {/* About Us dropdown */}
             <div className="relative" ref={aboutRef}>
@@ -88,7 +90,7 @@ const Navbar = () => {
                 {underline(isAboutActive)}
               </button>
               {aboutOpen && (
-                <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
+                <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
                   {ABOUT_LINKS.map((link) => (
                     <Link
                       key={link.path}
@@ -103,13 +105,6 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-
-            {PRIMARY_LINKS.slice(1).map((link) => (
-              <Link key={link.path} to={link.path} className={linkClasses(isActive(link.path))}>
-                {link.name}
-                {underline(isActive(link.path))}
-              </Link>
-            ))}
           </div>
 
           <div className="lg:hidden">
@@ -124,18 +119,21 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu — same 5 links + an expandable "About Us" section */}
+      {/* Mobile menu — same 5 links + an expandable "About Us" section, About Us last */}
       {isOpen && (
         <div className="lg:hidden border-t border-gray-200 bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
-              to="/"
-              className={`block px-3 py-2 rounded-md text-base font-semibold ${
-                isActive('/') ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
-              }`}
-            >
-              Home
-            </Link>
+            {PRIMARY_LINKS.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`block px-3 py-2 rounded-md text-base font-semibold ${
+                  isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
 
             <button
               onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
@@ -161,18 +159,6 @@ const Navbar = () => {
                 ))}
               </div>
             )}
-
-            {PRIMARY_LINKS.slice(1).map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`block px-3 py-2 rounded-md text-base font-semibold ${
-                  isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
           </div>
         </div>
       )}
