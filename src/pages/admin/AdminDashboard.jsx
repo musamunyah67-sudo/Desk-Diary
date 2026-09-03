@@ -17,12 +17,14 @@ import {
   Handshake,
   Inbox,
   ShieldCheck,
-  Save
+  Save,
+  IdCard
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ContentManager from './ContentManager'
 import InboxManager from './InboxManager'
 import RolesManager from './RolesManager'
+import DigitalIDsManager from './DigitalIDsManager'
 import {
   getPlatformSettings,
   updatePlatformSettings,
@@ -47,6 +49,7 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'digital_ids', label: 'Digital IDs', icon: IdCard },
     { id: 'stories', label: 'Stories', icon: FileText },
     { id: 'news', label: 'News', icon: Newspaper },
     { id: 'events', label: 'Events', icon: Calendar },
@@ -113,6 +116,8 @@ const AdminDashboard = () => {
         {/* Main Content */}
         <main className="flex-1 p-4 md:p-8">
           {activeTab === 'overview' && <Overview onNavigate={setActiveTab} />}
+
+          {activeTab === 'digital_ids' && <DigitalIDsManager />}
 
           {activeTab === 'stories' && (
             <ContentManager
