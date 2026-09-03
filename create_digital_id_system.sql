@@ -167,7 +167,7 @@ LANGUAGE sql
 SECURITY DEFINER
 SET search_path = public
 AS $$
-  SELECT encode(gen_random_bytes(32), 'hex');
+  SELECT substr(md5(random()::text || clock_timestamp()::text), 1, 32) || substr(md5(random()::text || clock_timestamp()::text), 1, 32);
 $$;
 
 -- Grant execute permission to authenticated users
