@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase'
 
 // Helper function for REST API calls to bypass SDK timeout issues
-const restFetch = async (endpoint, options = {}) => {
+export const restFetch = async (endpoint, options = {}) => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
   
