@@ -24,6 +24,7 @@ const Donate = lazy(() => import('./pages/Donate'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Login = lazy(() => import('./pages/Login'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+const VerifyMember = lazy(() => import('./pages/VerifyMember'))
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/verify/:token" element={<VerifyMember />} />
               </Routes>
             </Suspense>
           </main>
