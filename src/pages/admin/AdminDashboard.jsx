@@ -18,13 +18,16 @@ import {
   Inbox,
   ShieldCheck,
   Save,
-  IdCard
+  IdCard,
+  Wrench
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ContentManager from './ContentManager'
 import InboxManager from './InboxManager'
 import RolesManager from './RolesManager'
 import DigitalIDsManager from './DigitalIDsManager'
+import MaintenanceControl from './MaintenanceControl'
+import { isMaintenanceOwner } from '../../lib/maintenanceConfig'
 import {
   getPlatformSettings,
   updatePlatformSettings,
@@ -37,6 +40,7 @@ import toast from 'react-hot-toast'
 const AdminDashboard = () => {
   const { user, role, logout, hasRole } = useAuth()
   const [activeTab, setActiveTab] = useState('overview')
+  const isOwner = isMaintenanceOwner(user?.email)
 
   if (!hasRole('admin')) {
     return (
@@ -65,6 +69,7 @@ const AdminDashboard = () => {
     { id: 'inbox', label: 'Inbox (Submissions)', icon: Inbox },
     { id: 'roles', label: 'Admins & Roles', icon: ShieldCheck },
     { id: 'settings', label: 'Settings', icon: Settings },
+    ...(isOwner ? [{ id: 'maintenance', label: 'Maintenance Control', icon: Wrench }] : []),
   ]
 
   return (
@@ -331,6 +336,8 @@ const AdminDashboard = () => {
           {activeTab === 'inbox' && <InboxAll />}
 
           {activeTab === 'roles' && hasRole('admin') && <RolesManager />}
+
+          {activeTab === 'maintenance' && isOwner && <MaintenanceControl />}
 
           {activeTab === 'settings' && <SettingsManager />}
         </main>
