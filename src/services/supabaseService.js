@@ -580,3 +580,33 @@ export const getAllCampaigns = async () => getAllRows('campaigns', 'created_at',
 export const createCampaign = async (campaign) => createRow('campaigns', campaign)
 export const updateCampaign = async (id, updates) => updateRow('campaigns', id, updates)
 export const deleteCampaign = async (id) => deleteRow('campaigns', id)
+
+// ---------------------------------------------------------------------
+// Maintenance mode
+// get_maintenance_status() is public (anon included) — every page load
+// needs to know whether to show the maintenance page.
+// set_maintenance_mode() is the only write path, and the database itself
+// (not this file) rejects anyone but the exact maintenance owner — see
+// create_maintenance_mode.sql.
+// ---------------------------------------------------------------------
+export const getMaintenanceStatus = async () => {
+  try {
+    const response = await restFetch('rpc/get_maintenance_status', { method: 'POST' })
+    return response || { enabled: false, message: null }
+  } catch (error) {
+    // If this fails for any reason, fail OPEN (site behaves as if
+    // maintenance mode is off) rather than accidentally locking
+    // everyone out because of a transient network/API error.
+    console.error('Error fetching maintenance status:', error)
+    return { enabled: false, message: null }
+  }
+}
+
+export const setMaintenanceMode = async (enabled, message, options = {}) => {
+  const response = await restFetch('rpc/set_maintenance_mode', {
+    method: 'POST',
+    body: JSON.stringify({ p_enabled: enabled, p_message: message ?? null }),
+    ...options
+  })
+  return response
+}
