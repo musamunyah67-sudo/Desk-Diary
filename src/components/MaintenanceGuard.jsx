@@ -41,6 +41,14 @@ const MaintenanceGuard = () => {
     return (
       <Suspense fallback={<PageLoader />}>
         <Routes>
+          {/* /login must stay reachable even when blocked — otherwise the
+              maintenance owner has no way to authenticate on a fresh
+              session (cleared cookies, new browser, private window) once
+              maintenance mode is already on. Anyone else who logs in here
+              still gets routed straight back to the maintenance page for
+              every other route, so this isn't a bypass — just a door the
+              owner needs. */}
+          <Route path="/login" element={<Login />} />
           <Route path="/verify/:token" element={<VerifyMember />} />
           <Route path="*" element={<MaintenancePage message={maintenanceMessage} />} />
         </Routes>
