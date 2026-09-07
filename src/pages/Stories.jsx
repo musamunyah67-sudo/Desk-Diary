@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { getStories } from '../services/supabaseService'
 import AnimatedCard from '../components/AnimatedCard'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const Stories = () => {
+  usePageTitle('Stories')
   const [activeCategory, setActiveCategory] = useState('all')
   const [stories, setStories] = useState([])
   const [loading, setLoading] = useState(true)
