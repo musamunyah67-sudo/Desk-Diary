@@ -1,12 +1,24 @@
-import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, Instagram, Youtube, Linkedin, Mail, Phone, MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { subscribeToNewsletter } from '../services/supabaseService'
 import toast from 'react-hot-toast'
+import { useSiteSettings } from '../contexts/SiteSettingsContext'
 
 const Footer = () => {
+  const { socialMedia } = useSiteSettings()
   const [email, setEmail] = useState('')
   const [subscribing, setSubscribing] = useState(false)
+
+  const getSocialIcon = (platform) => {
+    switch (platform) {
+      case 'facebook': return Facebook
+      case 'instagram': return Instagram
+      case 'youtube': return Youtube
+      case 'linkedin': return Linkedin
+      default: return null
+    }
+  }
 
   const handleSubscribe = async (e) => {
     e.preventDefault()
@@ -82,18 +94,36 @@ const Footer = () => {
             </ul>
 
             <div className="flex space-x-4 mt-4">
-              <a href="https://web.facebook.com/deskdiaryded401" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors">
-                <Facebook size={22} />
-              </a>
-              <a href="https://www.instagram.com/deskdiaryded401/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors">
-                <Instagram size={22} />
-              </a>
-              <a href="https://www.youtube.com/@deskdiaryded401" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors">
-                <Youtube size={22} />
-              </a>
-              <a href="https://www.tiktok.com/@deskdiaryded401/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gold transition-colors text-sm self-center">
-                TikTok
-              </a>
+              {socialMedia.filter(s => s.visible && s.url).map((social) => {
+                const Icon = getSocialIcon(social.platform)
+                if (social.platform === 'tiktok') {
+                  return (
+                    <a
+                      key={social.platform}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-gold transition-colors text-sm self-center"
+                    >
+                      TikTok
+                    </a>
+                  )
+                }
+                if (Icon) {
+                  return (
+                    <a
+                      key={social.platform}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-gold transition-colors"
+                    >
+                      <Icon size={22} />
+                    </a>
+                  )
+                }
+                return null
+              })}
             </div>
           </div>
         </div>
