@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react'
-import { Camera, Video, Users, GraduationCap, Briefcase, X, Play } from 'lucide-react'
+import { Image as ImageIcon, Filter } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getGallery } from '../services/supabaseService'
 import AnimatedCard from '../components/AnimatedCard'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const Gallery = () => {
+  usePageTitle('Gallery')
   const [activeCategory, setActiveCategory] = useState('all')
   const [mediaItems, setMediaItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [lightboxItem, setLightboxItem] = useState(null)
 
   const categories = [
+    { id: 'all', name: 'All Media', icon: ImageIcon },
+    { id: 'interviews', name: 'Interviews', icon: ImageIcon },
+    { id: 'students', name: 'Students', icon: ImageIcon },
+    { id: 'teachers', name: 'Teachers', icon: ImageIcon },
+    { id: 'principals', name: 'Principals', icon: ImageIcon },
     { id: 'all', name: 'All Media', icon: Camera },
     { id: 'interviews', name: 'Interviews', icon: Video },
     { id: 'students', name: 'Students', icon: Users },
