@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Newspaper, Calendar, School, BookOpen } from 'lucide-react'
+import { Newspaper, Calendar, Clock, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { getNews, subscribeToNewsletter } from '../services/supabaseService'
-import toast from 'react-hot-toast'
+import { getNews } from '../services/supabaseService'
 import AnimatedCard from '../components/AnimatedCard'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const News = () => {
+  usePageTitle('News')
   const [activeCategory, setActiveCategory] = useState('all')
   const [newsItems, setNewsItems] = useState([])
   const [loading, setLoading] = useState(true)
