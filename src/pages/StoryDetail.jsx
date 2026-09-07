@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Calendar, ArrowLeft, Share2 } from 'lucide-react'
+import { ArrowLeft, Calendar, User, Share2, Heart } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { getStoryById } from '../services/supabaseService'
+import toast from 'react-hot-toast'
+import { usePageTitle } from '../hooks/usePageTitle'
 import AnimatedCard from '../components/AnimatedCard'
 
 const StoryDetail = () => {
+  usePageTitle('Story Detail')
   const { id } = useParams()
   const [story, setStory] = useState(null)
   const [loading, setLoading] = useState(true)
