@@ -1,33 +1,34 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, ChevronDown } from 'lucide-react'
-
-const PRIMARY_LINKS = [
-  { name: 'Home', path: '/' },
-  { name: 'Volunteer', path: '/volunteer' },
-  { name: 'Donate', path: '/donate' },
-  { name: 'Programs', path: '/programs' },
-  { name: 'Contact', path: '/contact' },
-]
-
-const ABOUT_LINKS = [
-  { name: 'About Us', path: '/about' },
-  { name: 'Stories', path: '/stories' },
-  { name: 'News', path: '/news' },
-  { name: 'Events', path: '/events' },
-  { name: 'Gallery', path: '/gallery' },
-  { name: 'Partners', path: '/partners' },
-]
+import { useSiteSettings } from '../contexts/SiteSettingsContext'
 
 const Navbar = () => {
+  const { navigation, loading } = useSiteSettings()
+  const PRIMARY_LINKS = navigation.primary || [
+    { label: 'Home', url: '/', is_external: false, open_in_new_tab: false, visible: true, display_order: 1 },
+    { label: 'Volunteer', url: '/volunteer', is_external: false, open_in_new_tab: false, visible: true, display_order: 2 },
+    { label: 'Donate', url: '/donate', is_external: false, open_in_new_tab: false, visible: true, display_order: 3 },
+    { label: 'Programs', url: '/programs', is_external: false, open_in_new_tab: false, visible: true, display_order: 4 },
+    { label: 'Contact', url: '/contact', is_external: false, open_in_new_tab: false, visible: true, display_order: 5 }
+  ]
+
+  const ABOUT_LINKS = navigation.about || [
+    { label: 'About Us', url: '/about', is_external: false, open_in_new_tab: false, visible: true, display_order: 1 },
+    { label: 'Stories', url: '/stories', is_external: false, open_in_new_tab: false, visible: true, display_order: 2 },
+    { label: 'News', url: '/news', is_external: false, open_in_new_tab: false, visible: true, display_order: 3 },
+    { label: 'Events', url: '/events', is_external: false, open_in_new_tab: false, visible: true, display_order: 4 },
+    { label: 'Gallery', url: '/gallery', is_external: false, open_in_new_tab: false, visible: true, display_order: 5 },
+    { label: 'Partners', url: '/partners', is_external: false, open_in_new_tab: false, visible: true, display_order: 6 }
+  ]
   const [isOpen, setIsOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
   const location = useLocation()
   const aboutRef = useRef(null)
 
-  const isActive = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path)
-  const isAboutActive = ABOUT_LINKS.some((l) => isActive(l.path))
+  const isActive = (url) => url === '/' ? location.pathname === '/' : location.pathname.startsWith(url)
+  const isAboutActive = ABOUT_LINKS.some((l) => isActive(l.url))
 
   // Close the desktop "About Us" dropdown on outside click
   useEffect(() => {
@@ -71,11 +72,24 @@ const Navbar = () => {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center space-x-1">
-            {PRIMARY_LINKS.map((link) => (
-              <Link key={link.path} to={link.path} className={linkClasses(isActive(link.path))}>
-                {link.name}
-                {underline(isActive(link.path))}
-              </Link>
+            {PRIMARY_LINKS.filter(link => link.visible).map((link) => (
+              link.is_external ? (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target={link.open_in_new_tab ? '_blank' : '_self'}
+                  rel={link.open_in_new_tab ? 'noopener noreferrer' : ''}
+                  className={linkClasses(isActive(link.url))}
+                >
+                  {link.label}
+                  {underline(isActive(link.url))}
+                </a>
+              ) : (
+                <Link key={link.url} to={link.url} className={linkClasses(isActive(link.url))}>
+                  {link.label}
+                  {underline(isActive(link.url))}
+                </Link>
+              )
             ))}
 
             {/* About Us dropdown */}
@@ -91,16 +105,30 @@ const Navbar = () => {
               </button>
               {aboutOpen && (
                 <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50">
-                  {ABOUT_LINKS.map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      className={`block px-4 py-2 text-sm font-medium transition-colors ${
-                        isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
+                  {ABOUT_LINKS.filter(link => link.visible).map((link) => (
+                    link.is_external ? (
+                      <a
+                        key={link.url}
+                        href={link.url}
+                        target={link.open_in_new_tab ? '_blank' : '_self'}
+                        rel={link.open_in_new_tab ? 'noopener noreferrer' : ''}
+                        className={`block px-4 py-2 text-sm font-medium transition-colors ${
+                          isActive(link.url) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
+                        }`}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.url}
+                        to={link.url}
+                        className={`block px-4 py-2 text-sm font-medium transition-colors ${
+                          isActive(link.url) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
+                    )
                   ))}
                 </div>
               )}
@@ -123,16 +151,30 @@ const Navbar = () => {
       {isOpen && (
         <div className="lg:hidden border-t border-gray-200 bg-white">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {PRIMARY_LINKS.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`block px-3 py-2 rounded-md text-base font-semibold ${
-                  isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
-                }`}
-              >
-                {link.name}
-              </Link>
+            {PRIMARY_LINKS.filter(link => link.visible).map((link) => (
+              link.is_external ? (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target={link.open_in_new_tab ? '_blank' : '_self'}
+                  rel={link.open_in_new_tab ? 'noopener noreferrer' : ''}
+                  className={`block px-3 py-2 rounded-md text-base font-semibold ${
+                    isActive(link.url) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.url}
+                  to={link.url}
+                  className={`block px-3 py-2 rounded-md text-base font-semibold ${
+                    isActive(link.url) ? 'text-primary bg-gold/10' : 'text-gray-700 hover:bg-gold/10 hover:text-primary'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
 
             <button
@@ -146,16 +188,30 @@ const Navbar = () => {
             </button>
             {mobileAboutOpen && (
               <div className="pl-4 space-y-1">
-                {ABOUT_LINKS.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`block px-3 py-2 rounded-md text-sm font-medium ${
-                      isActive(link.path) ? 'text-primary bg-gold/10' : 'text-gray-600 hover:bg-gold/10 hover:text-primary'
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
+                {ABOUT_LINKS.filter(link => link.visible).map((link) => (
+                  link.is_external ? (
+                    <a
+                      key={link.url}
+                      href={link.url}
+                      target={link.open_in_new_tab ? '_blank' : '_self'}
+                      rel={link.open_in_new_tab ? 'noopener noreferrer' : ''}
+                      className={`block px-3 py-2 rounded-md text-sm font-medium ${
+                        isActive(link.url) ? 'text-primary bg-gold/10' : 'text-gray-600 hover:bg-gold/10 hover:text-primary'
+                      }`}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.url}
+                      to={link.url}
+                      className={`block px-3 py-2 rounded-md text-sm font-medium ${
+                        isActive(link.url) ? 'text-primary bg-gold/10' : 'text-gray-600 hover:bg-gold/10 hover:text-primary'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  )
                 ))}
               </div>
             )}
