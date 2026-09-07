@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Calendar, MapPin, Clock, ArrowRight, X } from 'lucide-react'
+import { Calendar, MapPin, Clock, Users, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { getEvents, createEventRegistration } from '../services/supabaseService'
+import { getEvents } from '../services/supabaseService'
 import AnimatedCard from '../components/AnimatedCard'
-import toast from 'react-hot-toast'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const Events = () => {
+  usePageTitle('Events')
+
   const [activeTab, setActiveTab] = useState('upcoming')
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
