@@ -12,12 +12,14 @@ import {
   getTestimonials,
   getPartners
 } from '../services/supabaseService'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const HERO_IMAGES = ['/images/hero-1.jpg', '/images/hero-2.jpg', '/images/hero-3.jpg', '/images/hero-4.jpg', '/images/hero-5.jpg', '/images/hero-6.jpg']
 
 const DEFAULT_STATS = { students_featured: '100+', schools_partnered: '10+', events_covered: '20+', counties_reached: '15' }
 
 const Home = () => {
+  usePageTitle('Home')
   const navigate = useNavigate()
   const [heroIndex, setHeroIndex] = useState(0)
   const [stats, setStats] = useState(DEFAULT_STATS)
