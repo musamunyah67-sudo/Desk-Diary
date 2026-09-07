@@ -610,3 +610,112 @@ export const setMaintenanceMode = async (enabled, message, options = {}) => {
   })
   return response
 }
+
+// ============================================================
+// Site Settings Service Functions
+// ============================================================
+
+export const getSiteSettings = async (options = {}) => {
+  try {
+    const response = await restFetch('rpc/get_site_settings', {
+      method: 'POST',
+      ...options
+    })
+    return response || {}
+  } catch (error) {
+    console.log('Error fetching site settings:', error)
+    return {}
+  }
+}
+
+export const getNavigationItems = async (section, options = {}) => {
+  try {
+    const response = await restFetch('rpc/get_navigation_items', {
+      method: 'POST',
+      body: JSON.stringify({ section_param: section }),
+      ...options
+    })
+    return response || []
+  } catch (error) {
+    console.log('Error fetching navigation items:', error)
+    return []
+  }
+}
+
+export const getSocialMediaSettings = async (options = {}) => {
+  try {
+    const response = await restFetch('rpc/get_social_media_settings', {
+      method: 'POST',
+      ...options
+    })
+    return response || []
+  } catch (error) {
+    console.log('Error fetching social media settings:', error)
+    return []
+  }
+}
+
+export const getHeroCTAs = async (options = {}) => {
+  try {
+    const response = await restFetch('rpc/get_hero_ctas', {
+      method: 'POST',
+      ...options
+    })
+    return response || []
+  } catch (error) {
+    console.log('Error fetching hero CTAs:', error)
+    return []
+  }
+}
+
+export const updateSiteSetting = async (key, value, options = {}) => {
+  const response = await restFetch('site_settings?key=eq.' + encodeURIComponent(key), {
+    method: 'PATCH',
+    body: JSON.stringify({ value }),
+    ...options
+  })
+  return response && Array.isArray(response) ? response[0] : response
+}
+
+export const updateNavigationItem = async (id, updates, options = {}) => {
+  const response = await restFetch(`navigation_items?id=eq.${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+    ...options
+  })
+  return response && Array.isArray(response) ? response[0] : response
+}
+
+export const createNavigationItem = async (item, options = {}) => {
+  const response = await restFetch('navigation_items', {
+    method: 'POST',
+    body: JSON.stringify(item),
+    ...options
+  })
+  return response && Array.isArray(response) ? response[0] : response
+}
+
+export const deleteNavigationItem = async (id, options = {}) => {
+  await restFetch(`navigation_items?id=eq.${id}`, {
+    method: 'DELETE',
+    ...options
+  })
+}
+
+export const updateSocialMediaSetting = async (platform, updates, options = {}) => {
+  const response = await restFetch(`social_media_settings?platform=eq.${platform}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+    ...options
+  })
+  return response && Array.isArray(response) ? response[0] : response
+}
+
+export const updateHeroCTA = async (buttonOrder, updates, options = {}) => {
+  const response = await restFetch(`hero_ctas?button_order=eq.${buttonOrder}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+    ...options
+  })
+  return response && Array.isArray(response) ? response[0] : response
+}
