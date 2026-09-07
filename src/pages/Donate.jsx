@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Heart, CreditCard, Smartphone, Building2, Target, TrendingUp } from 'lucide-react'
+import { Heart, HandCoins, CreditCard, Banknote, Send } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getCampaigns, getDonationMethods, getPlatformSettings } from '../services/supabaseService'
-import AnimatedIcon from '../components/AnimatedIcon'
-import AnimatedStat from '../components/AnimatedStat'
+import { getDonationMethods } from '../services/supabaseService'
+import toast from 'react-hot-toast'
+import AnimatedCard from '../components/AnimatedCard'
+import { usePageTitle } from '../hooks/usePageTitle'
 
-const METHOD_ICONS = { CreditCard, Smartphone, Building2 }
+const METHOD_ICONS = { CreditCard, HandCoins, Banknote }
 const DEFAULT_DONATE_STATS = { students_impacted: '600+', schools_reached: '30+', stories_documented: '50+', counties_covered: '15' }
 
 const Donate = () => {
+  usePageTitle('Donate')
   const [campaigns, setCampaigns] = useState([])
   const [donationMethods, setDonationMethods] = useState([])
   const [stats, setStats] = useState(DEFAULT_DONATE_STATS)
