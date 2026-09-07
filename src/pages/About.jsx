@@ -1,8 +1,10 @@
 import { Target, Eye, Heart, Users, Award, Shield } from 'lucide-react'
 import { motion } from 'framer-motion'
 import AnimatedIcon from '../components/AnimatedIcon'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const About = () => {
+  usePageTitle('About Us')
   const coreValues = [
     { name: 'Integrity', icon: Shield },
     { name: 'Professionalism', icon: Award },
