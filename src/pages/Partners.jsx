@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { School, Star, Plus, MapPin, Mail, Phone, X, Handshake } from 'lucide-react'
+import { School, Star, Plus, MapPin, Mail, Phone, X, Handshake, Building2, Award, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getPartners, submitSchoolSubmission } from '../services/supabaseService'
 import toast from 'react-hot-toast'
 import AnimatedCard from '../components/AnimatedCard'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const Partners = () => {
+  usePageTitle('Partners')
   const location = useLocation()
   const [activeTab, setActiveTab] = useState('schools')
   const [partners, setPartners] = useState([])
