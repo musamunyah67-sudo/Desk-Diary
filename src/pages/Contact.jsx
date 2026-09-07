@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react'
-import { Mail, Phone, MapPin, Send, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { submitContactMessage, subscribeToNewsletter } from '../services/supabaseService'
 import toast from 'react-hot-toast'
-import { getContactSettings, submitContactMessage } from '../services/supabaseService'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 const DEFAULT_CONTACT = {
-  phone: '+231 770 755 152',
-  whatsapp: '+231 880 986 088',
-  email: 'deskdiary401@gmail.com',
   address: 'Behind Moses Blah Compound, Soul Clinic Community, Paynesville City-Liberia',
   facebook_url: 'https://web.facebook.com/deskdiaryded401',
   instagram_url: 'https://www.instagram.com/deskdiaryded401/',
@@ -16,6 +14,7 @@ const DEFAULT_CONTACT = {
 }
 
 const Contact = () => {
+  usePageTitle('Contact')
   const [settings, setSettings] = useState(DEFAULT_CONTACT)
   const [submitting, setSubmitting] = useState(false)
   const [formData, setFormData] = useState({
