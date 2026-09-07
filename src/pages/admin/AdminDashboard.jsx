@@ -19,7 +19,8 @@ import {
   ShieldCheck,
   Save,
   IdCard,
-  Wrench
+  Wrench,
+  Globe
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ContentManager from './ContentManager'
@@ -27,6 +28,7 @@ import InboxManager from './InboxManager'
 import RolesManager from './RolesManager'
 import DigitalIDsManager from './DigitalIDsManager'
 import MaintenanceControl from './MaintenanceControl'
+import WebsiteSettingsManager from './WebsiteSettingsManager'
 import { isMaintenanceOwner } from '../../lib/maintenanceConfig'
 import {
   getPlatformSettings,
@@ -69,6 +71,12 @@ const AdminDashboard = () => {
     { id: 'inbox', label: 'Inbox (Submissions)', icon: Inbox },
     { id: 'roles', label: 'Admins & Roles', icon: ShieldCheck },
     { id: 'settings', label: 'Settings', icon: Settings },
+    // Website Settings only for superadmins
+    ...(hasRole('superadmin') ? [{ id: 'website_settings', label: 'Website Settings', icon: Globe }] : []),
+    // Completely absent from the menu for anyone but the maintenance
+    // owner — not just disabled. The real gate is server-side (see
+    // set_maintenance_mode RPC), this just avoids showing a control
+    // that would fail for everyone else anyway.
     ...(isOwner ? [{ id: 'maintenance', label: 'Maintenance Control', icon: Wrench }] : []),
   ]
 
@@ -337,9 +345,16 @@ const AdminDashboard = () => {
 
           {activeTab === 'roles' && hasRole('admin') && <RolesManager />}
 
+          {/* Doubly gated: absent from the nav for non-owners (above),
+              and even if someone forced activeTab via devtools, this
+              still only renders the panel — it can't grant them the
+              ability to actually change the setting, since that check
+              happens in the database, not here. */}
           {activeTab === 'maintenance' && isOwner && <MaintenanceControl />}
 
           {activeTab === 'settings' && <SettingsManager />}
+
+          {activeTab === 'website_settings' && <WebsiteSettingsManager />}
         </main>
       </div>
     </div>
