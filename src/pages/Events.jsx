@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Calendar, MapPin, Clock, Users, ArrowRight } from 'lucide-react'
+import { Calendar, MapPin, Clock, Users, ArrowRight, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { getEvents } from '../services/supabaseService'
+import { getEvents, createEventRegistration } from '../services/supabaseService'
+import toast from 'react-hot-toast'
 import AnimatedCard from '../components/AnimatedCard'
 import { usePageTitle } from '../hooks/usePageTitle'
 
