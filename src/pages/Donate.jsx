@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Heart, HandCoins, CreditCard, Banknote, Send } from 'lucide-react'
+import { Heart, HandCoins, CreditCard, Banknote, Send, Target, TrendingUp, Building2 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getDonationMethods } from '../services/supabaseService'
+import { getDonationMethods, getCampaigns, getPlatformSettings } from '../services/supabaseService'
 import toast from 'react-hot-toast'
 import AnimatedCard from '../components/AnimatedCard'
+import AnimatedIcon from '../components/AnimatedIcon'
+import AnimatedStat from '../components/AnimatedStat'
 import { usePageTitle } from '../hooks/usePageTitle'
 
 const METHOD_ICONS = { CreditCard, HandCoins, Banknote }
