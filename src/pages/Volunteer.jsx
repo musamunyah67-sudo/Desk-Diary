@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Heart, Users, Clock, Award, Send } from 'lucide-react'
+import { Heart, Users, Clock, Award, Send, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getVolunteerOpportunities, submitVolunteerApplication } from '../services/supabaseService'
+import { getVolunteerOpportunities, getVolunteerResources, getPlatformSettings, submitVolunteerApplication } from '../services/supabaseService'
 import toast from 'react-hot-toast'
 import AnimatedCard from '../components/AnimatedCard'
+import AnimatedStat from '../components/AnimatedStat'
 import { usePageTitle } from '../hooks/usePageTitle'
 
 const DEFAULT_VOLUNTEER_STATS = { active_volunteers: '20+', hours_contributed: '2500+', schools_supported: '10+', students_impacted: '600+' }
