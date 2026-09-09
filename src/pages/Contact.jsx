@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Clock } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { submitContactMessage, subscribeToNewsletter } from '../services/supabaseService'
+import { useState, useEffect } from 'react'
+import { Mail, Phone, MapPin, Send, Clock, ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { submitContactMessage, subscribeToNewsletter, getContactSettings } from '../services/supabaseService'
 import toast from 'react-hot-toast'
 import { usePageTitle } from '../hooks/usePageTitle'
 
