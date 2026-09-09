@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Newspaper, Calendar, Clock, ArrowRight } from 'lucide-react'
+import { Newspaper, Calendar, Clock, ArrowRight, BookOpen, School } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { getNews } from '../services/supabaseService'
+import { getNews, subscribeToNewsletter } from '../services/supabaseService'
+import toast from 'react-hot-toast'
 import AnimatedCard from '../components/AnimatedCard'
 import { usePageTitle } from '../hooks/usePageTitle'
 
