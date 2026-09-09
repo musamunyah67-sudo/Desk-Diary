@@ -13,6 +13,7 @@ import {
   getPartners
 } from '../services/supabaseService'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { useSiteSettings } from '../contexts/SiteSettingsContext'
 
 const HERO_IMAGES = ['/images/hero-1.jpg', '/images/hero-2.jpg', '/images/hero-3.jpg', '/images/hero-4.jpg', '/images/hero-5.jpg', '/images/hero-6.jpg']
 
@@ -21,6 +22,7 @@ const DEFAULT_STATS = { students_featured: '100+', schools_partnered: '10+', eve
 const Home = () => {
   usePageTitle('Home')
   const navigate = useNavigate()
+  const { heroCTAs } = useSiteSettings()
   const [heroIndex, setHeroIndex] = useState(0)
   const [stats, setStats] = useState(DEFAULT_STATS)
   const [stories, setStories] = useState([])
@@ -55,83 +57,79 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section — front-page treatment: text column + rotating photo, like a masthead spread */}
-      <section className="relative text-white overflow-hidden">
-        {/* Full-bleed backdrop: graduation photo with a light gradient over it for text readability */}
+      {/* Hero Section — the rotating field photos ARE the full-bleed backdrop now */}
+      <section className="relative text-white overflow-hidden min-h-[600px] flex items-center">
+        {/* Full-bleed rotating backdrop */}
         <div className="absolute inset-0">
-          <img
-            src="/images/hero-bg-students.jpg"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-cover object-top"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/55 to-primary/25" />
+          <AnimatePresence mode="sync">
+            <motion.img
+              key={heroIndex}
+              src={HERO_IMAGES[heroIndex]}
+              alt="Desk Diary students in the field"
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: 'easeOut' }}
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+          </AnimatePresence>
+          {/* Gradient overlay for text legibility over the photo */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/65 to-primary/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-primary/10" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="grid lg:grid-cols-5 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              className="lg:col-span-3"
-            >
-              <h1 className="font-anton text-5xl md:text-6xl lg:text-7xl leading-[0.95] mb-6">
-                DESK<br />DIARY
-              </h1>
-              <p className="font-serif italic text-xl md:text-2xl text-white/85 mb-6 max-w-xl leading-snug">
-                "Your desk. Your story. Your voice."
-              </p>
-              <p className="text-white/70 text-lg mb-9 max-w-xl leading-relaxed">
-                Documenting, celebrating, and amplifying the voices, achievements, talents, and educational experiences of students.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/stories" className="bg-gold text-primary px-8 py-3.5 font-semibold hover:bg-white transition-colors inline-flex items-center justify-center">
-                  Explore Stories <ArrowRight className="ml-2" size={20} />
-                </Link>
-                <Link to="/volunteer" className="border border-white/40 px-8 py-3.5 font-semibold hover:border-white hover:bg-white/5 transition-colors">
-                  Get Involved
-                </Link>
-              </div>
-            </motion.div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="max-w-2xl"
+          >
+            <h1 className="font-anton text-5xl md:text-6xl lg:text-7xl leading-[0.95] mb-6">
+              DESK<br />DIARY
+            </h1>
+            <p className="font-serif italic text-xl md:text-2xl text-white/90 mb-6 max-w-xl leading-snug">
+              "Your desk. Your story. Your voice."
+            </p>
+            <p className="text-white/80 text-lg mb-9 max-w-xl leading-relaxed">
+              Documenting, celebrating, and amplifying the voices, achievements, talents, and educational experiences of students.
+            </p>
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+              {[...heroCTAs]
+                .filter((cta) => cta.visible !== false && cta.label && cta.url)
+                .sort((a, b) => (a.button_order || 0) - (b.button_order || 0))
+                .map((cta, i) => {
+                  const isExternal = /^https?:\/\//i.test(cta.url)
+                  const isPrimary = i === 0
+                  const className = isPrimary
+                    ? 'bg-gold text-primary px-8 py-3.5 font-semibold hover:bg-white transition-colors inline-flex items-center justify-center'
+                    : 'border border-white/40 px-8 py-3.5 font-semibold hover:border-white hover:bg-white/5 transition-colors inline-flex items-center justify-center'
+                  return isExternal ? (
+                    <a key={cta.button_order ?? cta.label} href={cta.url} target="_blank" rel="noopener noreferrer" className={className}>
+                      {cta.label} {isPrimary && <ArrowRight className="ml-2" size={20} />}
+                    </a>
+                  ) : (
+                    <Link key={cta.button_order ?? cta.label} to={cta.url} className={className}>
+                      {cta.label} {isPrimary && <ArrowRight className="ml-2" size={20} />}
+                    </Link>
+                  )
+                })}
+            </div>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="lg:col-span-2"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden border border-white/10">
-                <AnimatePresence mode="sync">
-                  <motion.img
-                    key={heroIndex}
-                    src={HERO_IMAGES[heroIndex]}
-                    alt="Desk Diary students in the field"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </AnimatePresence>
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-end">
-                  <div className="flex gap-1.5">
-                    {HERO_IMAGES.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setHeroIndex(i)}
-                        aria-label={`Show hero image ${i + 1}`}
-                        className={`h-1.5 rounded-full transition-all ${i === heroIndex ? 'w-6 bg-gold' : 'w-1.5 bg-white/50'}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+          {/* Rotating-image indicator dots */}
+          <div className="flex gap-1.5 mt-12">
+            {HERO_IMAGES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setHeroIndex(i)}
+                aria-label={`Show hero image ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all ${i === heroIndex ? 'w-6 bg-gold' : 'w-1.5 bg-white/50'}`}
+              />
+            ))}
           </div>
         </div>
-        <div className="h-10 bg-gradient-to-b from-primary to-white" />
+        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-transparent to-white" />
       </section>
 
       {/* Mission Highlight */}
