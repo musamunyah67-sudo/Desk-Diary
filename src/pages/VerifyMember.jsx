@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { CheckCircle, XCircle, Clock, Calendar, User, Shield, AlertCircle } from 'lucide-react'
+import { CheckCircle, XCircle, Clock, Calendar, User, Shield, AlertCircle, Image as ImageIcon, Briefcase } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { restFetch } from '../services/supabaseService'
+import { verifyMember } from '../services/memberService'
 import AnimatedCard from '../components/AnimatedCard'
 import { usePageTitle } from '../hooks/usePageTitle'
 
