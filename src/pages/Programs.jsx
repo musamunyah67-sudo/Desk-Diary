@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react'
-import { Users, Award, GraduationCap, Heart, Wrench, HandHeart } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Users, Award, GraduationCap, Heart, Wrench, HandHeart, Sparkles, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getPrograms } from '../services/supabaseService'
+import { getPrograms, getPlatformSettings } from '../services/supabaseService'
 import AnimatedCard from '../components/AnimatedCard'
+import AnimatedIcon from '../components/AnimatedIcon'
+import AnimatedStat from '../components/AnimatedStat'
 import { usePageTitle } from '../hooks/usePageTitle'
 
+const ICONS = { Users, Award, GraduationCap, Heart, Wrench, HandHeart, Sparkles }
+const DEFAULT_IMPACTS = { media_clubs: '10+', students_trained: '600+', workshops_conducted: '25+', mentors_engaged: '20+' }
+
 const Programs = () => {
+  usePageTitle('Programs')
   const [programs, setPrograms] = useState([])
   const [impacts, setImpacts] = useState(DEFAULT_IMPACTS)
   const [loading, setLoading] = useState(true)
