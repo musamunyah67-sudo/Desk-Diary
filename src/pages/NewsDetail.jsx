@@ -59,7 +59,7 @@ const NewsDetail = () => {
           <h1 className="font-anton text-4xl md:text-5xl mb-4">{article.title}</h1>
           <div className="flex items-center space-x-4 text-gold">
             <Calendar size={18} />
-            <span>{new Date(article.created_at).toLocaleDateString()}</span>
+            <span>{new Date(article.content_date || article.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             <span>•</span>
             <span className="capitalize">{article.category.replace('_', ' ')}</span>
           </div>
