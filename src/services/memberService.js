@@ -48,6 +48,8 @@ export const createMember = async (memberData, photoFile, options = {}) => {
       position: memberData.position,
       status: memberData.status || 'active',
       photo_url: photoUrl,
+      issue_date: memberData.issueDate || null,
+      expiry_date: memberData.expiryDate || null,
       verification_token: verificationToken,
       verification_active: true,
       created_by: options.userId // Will be set from auth context
