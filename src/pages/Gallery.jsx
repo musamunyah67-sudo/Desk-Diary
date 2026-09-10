@@ -181,6 +181,9 @@ const Gallery = () => {
               <span className="text-gold text-xs font-semibold capitalize">{lightboxItem.category}</span>
               <h3 className="font-anton text-2xl mt-1 mb-2">{lightboxItem.title}</h3>
               <p className="text-gray-600">{lightboxItem.description}</p>
+              <p className="text-gray-400 text-sm mt-3">
+                {new Date(lightboxItem.media_date || lightboxItem.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
             </div>
           </motion.div>
         </motion.div>
