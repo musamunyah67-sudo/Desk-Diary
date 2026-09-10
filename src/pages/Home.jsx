@@ -336,7 +336,7 @@ const Home = () => {
       {/* Partners Preview — admin managed */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-anton text-4xl text-primary text-center mb-12">Our Partners</h2>
+          <h2 className="font-anton text-4xl text-primary text-center mb-12">Our School Network</h2>
           {loading ? (
             <p className="text-center text-gray-500 py-8">Loading partners...</p>
           ) : partners.length > 0 ? (
@@ -361,7 +361,7 @@ const Home = () => {
               </div>
               <div className="text-center mt-8">
                 <Link to="/partners" className="text-primary hover:text-gold font-semibold inline-flex items-center">
-                  View All Partners <ArrowRight className="ml-2" size={20} />
+                  View All Schools <ArrowRight className="ml-2" size={20} />
                 </Link>
               </div>
             </>
