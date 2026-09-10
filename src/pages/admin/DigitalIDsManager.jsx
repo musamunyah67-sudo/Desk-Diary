@@ -28,6 +28,16 @@ import {
   checkMemberIdUnique
 } from '../../services/memberService'
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  return new Date(`${dateStr}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+const isExpired = (expiryDate) => {
+  if (!expiryDate) return false
+  return new Date(`${expiryDate}T00:00:00`) < new Date(new Date().toDateString())
+}
+
 const DigitalIDsManager = () => {
   const { user, accessToken, hasRole } = useAuth()
   const [members, setMembers] = useState([])
@@ -46,6 +56,8 @@ const DigitalIDsManager = () => {
     fullName: '',
     position: '',
     status: 'active',
+    issueDate: '',
+    expiryDate: '',
     photoFile: null
   })
   const [formLoading, setFormLoading] = useState(false)
@@ -122,7 +134,9 @@ const DigitalIDsManager = () => {
         member_id: formData.memberId,
         full_name: formData.fullName,
         position: formData.position,
-        status: formData.status
+        status: formData.status,
+        issue_date: formData.issueDate || null,
+        expiry_date: formData.expiryDate || null
       }, formData.photoFile, { accessToken })
 
       toast.success('Member updated successfully')
@@ -192,6 +206,8 @@ const DigitalIDsManager = () => {
       fullName: '',
       position: '',
       status: 'active',
+      issueDate: '',
+      expiryDate: '',
       photoFile: null
     })
     setMemberIdError('')
@@ -205,6 +221,8 @@ const DigitalIDsManager = () => {
       fullName: member.full_name,
       position: member.position,
       status: member.status,
+      issueDate: member.issue_date || '',
+      expiryDate: member.expiry_date || '',
       photoFile: null
     })
     setShowEditForm(true)
@@ -317,6 +335,7 @@ const DigitalIDsManager = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member ID</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">QR</th>
                 {hasRole('superadmin') && (
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created By</th>
@@ -327,7 +346,7 @@ const DigitalIDsManager = () => {
             <tbody className="divide-y divide-gray-200">
               {filteredMembers.length === 0 ? (
                 <tr>
-                  <td colSpan={hasRole('superadmin') ? 8 : 7} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={hasRole('superadmin') ? 9 : 8} className="px-6 py-12 text-center text-gray-500">
                     No members found. Create your first member to get started.
                   </td>
                 </tr>
@@ -364,6 +383,16 @@ const DigitalIDsManager = () => {
                       }`}>
                         {member.status}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      {member.expiry_date ? (
+                        <span className={isExpired(member.expiry_date) ? 'text-red-600 font-semibold' : 'text-gray-500'}>
+                          {formatDate(member.expiry_date)}
+                          {isExpired(member.expiry_date) && ' (expired)'}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">Not set</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {member.verification_active ? (
@@ -531,6 +560,29 @@ const MemberFormModal = ({ title, formData, setFormData, onSubmit, onCancel, loa
                 <option value="suspended">Suspended</option>
               </select>
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Issue Date</label>
+                <input
+                  type="date"
+                  value={formData.issueDate}
+                  onChange={(e) => setFormData({ ...formData, issueDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                <input
+                  type="date"
+                  value={formData.expiryDate}
+                  onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 -mt-2">
+              These are the official dates printed/verified on the physical ID card — they're independent of when this record was created, and won't regenerate the QR code when changed.
+            </p>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Photograph</label>
               <input
@@ -599,6 +651,12 @@ const QRModal = ({ member, onClose, onDownload, verificationURL }) => {
               <p className="text-sm text-gray-600">Member ID: <span className="font-semibold">{member.member_id}</span></p>
               <p className="text-sm text-gray-600">{member.full_name}</p>
               <p className="text-sm text-gray-600">{member.position}</p>
+              {member.issue_date && (
+                <p className="text-sm text-gray-600">Issued: <span className="font-semibold">{formatDate(member.issue_date)}</span></p>
+              )}
+              {member.expiry_date && (
+                <p className="text-sm text-gray-600">Expires: <span className="font-semibold">{formatDate(member.expiry_date)}</span></p>
+              )}
             </div>
 
             <div className="flex space-x-2 pt-4">
