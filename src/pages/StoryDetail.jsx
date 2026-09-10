@@ -62,7 +62,7 @@ const StoryDetail = () => {
           <h1 className="font-anton text-4xl md:text-5xl mb-4">{story.title}</h1>
           <div className="flex items-center space-x-4 text-gold">
             <Calendar size={18} />
-            <span>{new Date(story.created_at).toLocaleDateString()}</span>
+            <span>{new Date(story.story_gathered_at || story.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             <span>•</span>
             <span className="capitalize">{story.category} Story</span>
           </div>
