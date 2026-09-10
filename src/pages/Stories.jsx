@@ -106,7 +106,7 @@ const Stories = () => {
                       <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
                         <div>
                           <p className="font-semibold text-gray-700">{story.author || 'Desk Diary'}</p>
-                          <p>{new Date(story.created_at).toLocaleDateString()}</p>
+                          <p>{new Date(story.story_gathered_at || story.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                         </div>
                       </div>
                     </div>
@@ -175,7 +175,7 @@ const Stories = () => {
                   <span>•</span>
                   <span>By {selectedStory.author || 'Desk Diary'}</span>
                   <span>•</span>
-                  <span>{new Date(selectedStory.created_at).toLocaleDateString()}</span>
+                  <span>{new Date(selectedStory.story_gathered_at || selectedStory.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                 </div>
                 <div className="prose max-w-none">
                   <p className="text-gray-700 whitespace-pre-wrap">{selectedStory.content}</p>
