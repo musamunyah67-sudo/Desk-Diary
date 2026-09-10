@@ -66,7 +66,12 @@ const VerifyMember = () => {
     )
   }
 
-  const { result, member_id, full_name, position, status, photo_url, issued_at } = verificationData
+  const { result, member_id, full_name, position, status, photo_url, issued_at, issue_date, expiry_date } = verificationData
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return ''
+    return new Date(`${dateStr}T00:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  }
 
   const getStatusConfig = () => {
     switch (result) {
@@ -109,6 +114,16 @@ const VerifyMember = () => {
           textColor: 'text-red-800',
           title: '🔴 VERIFICATION INVALID',
           message: 'This Desk Diary ID is no longer valid.'
+        }
+      case 'expired':
+        return {
+          icon: XCircle,
+          bgColor: 'bg-red-100',
+          iconColor: 'text-red-500',
+          borderColor: 'border-red-200',
+          textColor: 'text-red-800',
+          title: '🔴 ID EXPIRED',
+          message: 'This Desk Diary identification card has expired.'
         }
       default:
         return {
@@ -204,12 +219,30 @@ const VerifyMember = () => {
                 </div>
               </div>
 
-              {issued_at && (
+              {issue_date ? (
+                <div className="flex items-start space-x-3">
+                  <Calendar className="text-gray-400 mt-1 shrink-0" size={20} />
+                  <div>
+                    <p className="text-sm text-gray-500">Issue Date</p>
+                    <p className="text-sm text-gray-900">{formatDate(issue_date)}</p>
+                  </div>
+                </div>
+              ) : issued_at && (
                 <div className="flex items-start space-x-3">
                   <Calendar className="text-gray-400 mt-1 shrink-0" size={20} />
                   <div>
                     <p className="text-sm text-gray-500">Issued</p>
                     <p className="text-sm text-gray-900">{new Date(issued_at).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              )}
+
+              {expiry_date && (
+                <div className="flex items-start space-x-3">
+                  <Calendar className={`mt-1 shrink-0 ${result === 'expired' ? 'text-red-400' : 'text-gray-400'}`} size={20} />
+                  <div>
+                    <p className="text-sm text-gray-500">Expiry Date</p>
+                    <p className={`text-sm ${result === 'expired' ? 'text-red-600 font-semibold' : 'text-gray-900'}`}>{formatDate(expiry_date)}</p>
                   </div>
                 </div>
               )}
@@ -223,6 +256,7 @@ const VerifyMember = () => {
                  result === 'inactive' ? 'Membership Inactive' :
                  result === 'suspended' ? 'Membership Suspended' :
                  result === 'revoked' ? 'Verification Invalid' :
+                 result === 'expired' ? 'ID Expired' :
                  'Verification Failed'}
               </p>
             </div>
