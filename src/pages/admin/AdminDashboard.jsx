@@ -144,6 +144,7 @@ const AdminDashboard = () => {
                 { name: 'author', label: 'Author', type: 'text' },
                 { name: 'content', label: 'Content', type: 'textarea', required: true },
                 { name: 'image_url', label: 'Image', type: 'image', aspect: 16 / 9 },
+                { name: 'story_gathered_at', label: 'Date Story Was Gathered', type: 'date', required: true },
                 { name: 'published', label: 'Publish immediately', type: 'checkbox' },
               ]}
             />
@@ -161,6 +162,7 @@ const AdminDashboard = () => {
                 { name: 'author', label: 'Author', type: 'text' },
                 { name: 'content', label: 'Content', type: 'textarea', required: true },
                 { name: 'image_url', label: 'Image', type: 'image', aspect: 16 / 9 },
+                { name: 'content_date', label: 'Date This Is About', type: 'date', required: true },
                 { name: 'published', label: 'Publish immediately', type: 'checkbox' },
               ]}
             />
@@ -195,6 +197,7 @@ const AdminDashboard = () => {
                 { name: 'category', label: 'Category', type: 'select', options: ['interviews', 'students', 'teachers', 'principals'] },
                 { name: 'media_type', label: 'Media Type', type: 'select', options: ['image', 'video'] },
                 { name: 'media_url', label: 'Upload (image or video, matching Media Type above)', type: 'image', typeFrom: 'media_type', aspect: 3 / 2 },
+                { name: 'media_date', label: 'Date Captured', type: 'date' },
               ]}
             />
           )}
