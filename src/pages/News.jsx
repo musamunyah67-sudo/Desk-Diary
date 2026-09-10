@@ -113,7 +113,7 @@ const News = () => {
                       <div className="p-6">
                         <div className="flex items-center space-x-2 mb-3">
                           <Calendar size={14} className="text-gray-500" />
-                        <span className="text-gray-500 text-sm">{new Date(item.created_at).toLocaleDateString()}</span>
+                        <span className="text-gray-500 text-sm">{new Date(item.content_date || item.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                       </div>
                       <span className="text-gold text-sm font-semibold capitalize">{item.category.replace('_', ' ')}</span>
                       <h3 className="font-anton text-xl mt-2 mb-3">{item.title}</h3>
