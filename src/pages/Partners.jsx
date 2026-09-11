@@ -91,8 +91,14 @@ const Partners = () => {
       {/* Hero */}
       <section className="bg-primary text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-anton text-5xl md:text-6xl mb-4">Our Partners</h1>
-          <p className="text-xl text-gold">Partner Schools and Educational Institutions</p>
+          <h1 className="font-anton text-5xl md:text-6xl mb-4">OUR SCHOOL NETWORK</h1>
+          <p className="text-xl text-gold">Connecting with schools. Celebrating students. Building relationships.</p>
+          <p className="text-lg text-white mt-4 max-w-3xl mx-auto">
+            Desk Diary works with schools across Liberia to tell student stories, highlight achievements, document school activities, and create meaningful opportunities for students.
+          </p>
+          <p className="text-lg text-white mt-2 max-w-3xl mx-auto">
+            Our school network includes schools we have formally partnered with as well as schools whose students, programs, and activities we have featured through our storytelling and media work.
+          </p>
         </div>
       </section>
 
