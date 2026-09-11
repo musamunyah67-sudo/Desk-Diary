@@ -45,6 +45,29 @@ const VerifyMember = () => {
   }
 
   if (!verificationData || !verificationData.success) {
+    // Check if it's an expired ID specifically
+    if (verificationData && verificationData.result === 'expired') {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center"
+          >
+            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <XCircle size={40} className="text-red-500" />
+            </div>
+            <h1 className="font-anton text-3xl text-primary mb-2">DESK DIARY</h1>
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <p className="text-red-800 font-semibold text-lg">🔴 ID EXPIRED</p>
+              <p className="text-red-600 text-sm mt-2">This Desk Diary identification card has expired.</p>
+            </div>
+            <p className="text-gray-500 text-sm">Please contact Desk Diary administration for renewal.</p>
+          </motion.div>
+        </div>
+      )
+    }
+    
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <motion.div
