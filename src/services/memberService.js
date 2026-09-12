@@ -144,12 +144,10 @@ export const verifyMember = async (token) => {
     })
     return response
   } catch (error) {
-    console.error('Error verifying member:', error)
-    return {
-      success: false,
-      result: 'invalid',
-      message: 'Verification failed'
-    }
+    // Pass through the actual error information for proper handling
+    // Don't hide system errors behind generic "invalid" responses
+    console.error('Verification system error:', error)
+    throw error
   }
 }
 
