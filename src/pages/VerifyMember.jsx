@@ -22,11 +22,14 @@ const VerifyMember = () => {
       const result = await verifyMember(token)
       setVerificationData(result)
     } catch (error) {
-      console.error('Verification error:', error)
+      console.error('Verification system error:', error)
+      // Distinguish between system errors and invalid tokens
+      // System errors should be treated differently from invalid tokens
       setVerificationData({
         success: false,
-        result: 'invalid',
-        message: 'Verification failed'
+        result: 'system_error',
+        message: 'System error - please try again later',
+        error: error.message || 'Unknown error'
       })
     } finally {
       setLoading(false)
@@ -45,7 +48,30 @@ const VerifyMember = () => {
   }
 
   if (!verificationData || !verificationData.success) {
-    // Check if it's an expired ID specifically
+    // Handle system errors separately from invalid tokens
+    if (verificationData && verificationData.result === 'system_error') {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center"
+          >
+            <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle size={40} className="text-yellow-500" />
+            </div>
+            <h1 className="font-anton text-3xl text-primary mb-2">DESK DIARY</h1>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <p className="text-yellow-800 font-semibold text-lg">⚠️ SYSTEM ERROR</p>
+              <p className="text-yellow-600 text-sm mt-2">Unable to complete verification. Please try again later.</p>
+            </div>
+            <p className="text-gray-500 text-sm">If this problem persists, please contact Desk Diary administration.</p>
+          </motion.div>
+        </div>
+      )
+    }
+    
+    // Handle expired IDs specifically
     if (verificationData && verificationData.result === 'expired') {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -68,6 +94,7 @@ const VerifyMember = () => {
       )
     }
     
+    // Handle invalid tokens
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <motion.div
@@ -147,6 +174,16 @@ const VerifyMember = () => {
           textColor: 'text-red-800',
           title: '🔴 ID EXPIRED',
           message: 'This Desk Diary identification card has expired.'
+        }
+      case 'system_error':
+        return {
+          icon: AlertCircle,
+          bgColor: 'bg-yellow-100',
+          iconColor: 'text-yellow-500',
+          borderColor: 'border-yellow-200',
+          textColor: 'text-yellow-800',
+          title: '⚠️ SYSTEM ERROR',
+          message: 'Unable to complete verification. Please try again later.'
         }
       default:
         return {
@@ -280,6 +317,7 @@ const VerifyMember = () => {
                  result === 'suspended' ? 'Membership Suspended' :
                  result === 'revoked' ? 'Verification Invalid' :
                  result === 'expired' ? 'ID Expired' :
+                 result === 'system_error' ? 'System Error' :
                  'Verification Failed'}
               </p>
             </div>
