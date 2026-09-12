@@ -410,6 +410,10 @@ const DigitalIDsManager = () => {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => {
+                            if (!member.verification_token) {
+                              toast.error('This member has no verification token on record. Try regenerating their QR code.')
+                              return
+                            }
                             setSelectedMember(member)
                             setShowQRModal(true)
                           }}
