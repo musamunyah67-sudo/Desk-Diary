@@ -12,6 +12,14 @@ export const restFetch = async (endpoint, options = {}) => {
     'Content-Type': 'application/json',
     ...options.headers
   }
+
+  // Without this, PostgREST returns an empty body on INSERT/UPDATE (201/204
+  // with no content), so callers relying on the returned row silently get
+  // `null` back instead of the row they just wrote.
+  const method = (options.method || 'GET').toUpperCase()
+  if ((method === 'POST' || method === 'PATCH') && !headers['Prefer']) {
+    headers['Prefer'] = 'return=representation'
+  }
   
   // Add authorization header if access token is available
   if (options.accessToken) {
